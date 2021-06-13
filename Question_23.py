@@ -105,14 +105,6 @@ def gauss_G(D, L, U):
     return G
 
 
-def jacobi_G(D, L, U):
-    G = matrixMultiply(invertMatrix(D), MatrixAddition(L, U))
-    for i in range(len(G)):
-        for j in range(len(G)):
-            G[i][j] = -G[i][j]
-    return G
-
-
 def norma(G):
     m_sum = 0
     for i in range(len(G)):
@@ -134,35 +126,6 @@ def hasDominantDiagonal(matrix):
     return True
 
 
-def swap_row(matrix, i, j):
-    temp = matrix[i]
-    matrix[i] = matrix[j]
-    matrix[j] = temp
-
-
-def pivoting(matrix, b):
-    for i in range(len(matrix)):
-        for j in range(i + 1, len(matrix)):
-            if abs(matrix[i][i]) < abs(matrix[j][i]):
-                swap_row(matrix, i, j)
-                swap_row(b, i, j)
-
-
-
-def jacobiMethod(matrix, b):
-    Xr, Yr, Zr, condition, count, epsilon = 0, 0, 0, 1, 0, 0.00001
-
-    while condition > epsilon:
-        count += 1
-        Xr1 = (b[0] - matrix[0][1] * Yr - matrix[0][2] * Zr) / matrix[0][0]
-        Yr1 = (b[1] - matrix[1][0] * Xr - matrix[1][2] * Zr) / matrix[1][1]
-        Zr1 = (b[2] - matrix[2][1] * Yr - matrix[2][0] * Xr) / matrix[2][2]
-        condition = abs(Xr1 - Xr)
-        Xr, Yr, Zr = round(Xr1, 6), round(Yr1, 6), round(Zr1, 6)
-        print("{0} Z = {1}, Y = {2}, X = {3}".format(count, Zr, Yr, Xr))
-    return count, Zr, Yr, Xr
-
-
 def gaussSeidelMethod(matrix, b):
     Xr, Yr, Zr, condition, count, epsilon = 0, 0, 0, 1, 0, 0.00001
 
@@ -174,8 +137,8 @@ def gaussSeidelMethod(matrix, b):
         Zr = (b[2] - matrix[2][1] * Yr - matrix[2][0] * Xr) / matrix[2][2]
         condition = abs(Xr - Xr_1)
         Xr, Yr, Zr = round(Xr, 6), round(Yr, 6), round(Zr, 6)
-        print("{0} Z = {1}, Y = {2}, X = {3}".format(count, Zr, Yr, Xr))
-    return count, Zr, Yr, Xr
+        print("{0} X = {1}, Y = {2}, Z = {3}".format(count, Xr, Yr, Zr))
+    return count, Xr, Yr, Zr
 
 
 def driver(matrix, b):
@@ -185,7 +148,7 @@ def driver(matrix, b):
         print("\nDominant Diagonal Matrix: No")
 
     print('\n*****Gauss Elimination Method*****')
-    print('X:{0}, Y:{1}, Z:{2}'.format(vector_mul(b, invertMatrix(matrix))[0][0],vector_mul(b, invertMatrix(matrix))[0][1],vector_mul(b, invertMatrix(matrix))[0][2]))
+    print('X = {0}, Y = {1}, Z = {2}'.format(vector_mul(b, invertMatrix(matrix))[0][0],vector_mul(b, invertMatrix(matrix))[0][1],vector_mul(b, invertMatrix(matrix))[0][2]))
 
     print("\n****Gauss Seidel Method****")
     gaussSeidelMethod(matrix, b)
