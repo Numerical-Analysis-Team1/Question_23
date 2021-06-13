@@ -8,6 +8,14 @@ def precision(num):
         return num
 
 
+def vector_mul(vector, matrix):
+    result = [[0] * len(matrix)]
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            result[0][i] += matrix[i][j] * vector[j]
+    return result
+
+
 def MatrixAddition(matrix_1, matrix_2):
     return [[matrix_1[i][k] + matrix_2[i][k] for k in range(len(matrix_1))] for i in range(len(matrix_1))]
 
@@ -49,10 +57,6 @@ def calcDet(matrix):
 
 def invertMatrix(matrix):
     determinant = calcDet(matrix)
-    if len(matrix) == 2:
-        return [[matrix[1][1] / determinant, -1 * matrix[0][1] / determinant],
-                [-1 * matrix[1][0] / determinant], matrix[0][0] / determinant]
-
     inverse = []
     for i in range(len(matrix)):
         inverseRow = []
@@ -162,7 +166,7 @@ def jacobiMethod(matrix, b):
 def gaussSeidelMethod(matrix, b):
     Xr, Yr, Zr, condition, count, epsilon = 0, 0, 0, 1, 0, 0.00001
 
-    while condition > epsilon:
+    while condition > epsilon and count < 100:
         count += 1
         Xr_1 = Xr
         Xr = (b[0] - matrix[0][1] * Yr - matrix[0][2] * Zr) / matrix[0][0]
@@ -180,30 +184,15 @@ def driver(matrix, b):
     else:
         print("\nDominant Diagonal Matrix: No")
 
-    print("\n********Jacobi Method*********")
-    c_Jacobi = jacobiMethod(matrix, b)[0]
-    if norma(jacobi_G(D(matrix), L(matrix), U(matrix))) < 1:
-        print("Converge !")
-    else:
-        print("Not converge...")
+    print('\n*****Gauss Elimination Method*****')
+    print('X:{0}, Y:{1}, Z:{2}'.format(vector_mul(b, invertMatrix(matrix))[0][0],vector_mul(b, invertMatrix(matrix))[0][1],vector_mul(b, invertMatrix(matrix))[0][2]))
 
     print("\n****Gauss Seidel Method****")
-    c_Gauss = gaussSeidelMethod(matrix, b)[0]
+    gaussSeidelMethod(matrix, b)
     if norma(gauss_G(D(matrix), L(matrix), U(matrix))) < 1:
         print("Converge !")
     else:
         print("Not converge...")
-
-    if norma(gauss_G(D(matrix), L(matrix), U(matrix))) < 1 or norma(jacobi_G(D(matrix), L(matrix), U(matrix))) < 1:
-        if c_Jacobi > c_Gauss:
-            print('\nGauss-Seidel method found the result faster.')
-        else:
-            print('\nJacobi method found the result faster.')
-    else:
-        print('\nNo one of the two methods not converge.')
-
-
-
 
 
 A = [[2, 1, 0], [3, -1, 0], [1, 4, -2]]
