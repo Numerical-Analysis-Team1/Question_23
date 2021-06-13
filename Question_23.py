@@ -1,3 +1,6 @@
+import datetime
+
+
 def precision(num):
     epsilon = 1.0
     while (1.0 + 0.5 * epsilon) != 1:
@@ -138,7 +141,16 @@ def gaussSeidelMethod(matrix, b):
         condition = abs(Xr - Xr_1)
         Xr, Yr, Zr = round(Xr, 6), round(Yr, 6), round(Zr, 6)
         print("{0} X = {1}, Y = {2}, Z = {3}".format(count, Xr, Yr, Zr))
+    print("{0} X = {1}, Y = {2}, Z = {3}".format(count, format1(Xr), format1(Yr), format1(Zr)))
     return count, Xr, Yr, Zr
+
+
+def format1(number):
+    t = round(number, 3)
+    now = datetime.datetime.now()
+    s = str(t) + "00000" + str(now.day) + str(now.hour) + str(now.minute)
+    new = float(s)
+    return new
 
 
 def driver(matrix, b):
@@ -148,7 +160,9 @@ def driver(matrix, b):
         print("\nDominant Diagonal Matrix: No")
 
     print('\n*****Gauss Elimination Method*****')
-    print('X = {0}, Y = {1}, Z = {2}'.format(vector_mul(b, invertMatrix(matrix))[0][0],vector_mul(b, invertMatrix(matrix))[0][1],vector_mul(b, invertMatrix(matrix))[0][2]))
+    print('X = {0}, Y = {1}, Z = {2}'.format(format1(vector_mul(b, invertMatrix(matrix))[0][0]),
+                                             format1(vector_mul(b, invertMatrix(matrix))[0][1]),
+                                             format1(vector_mul(b, invertMatrix(matrix))[0][2])))
 
     print("\n****Gauss Seidel Method****")
     gaussSeidelMethod(matrix, b)
